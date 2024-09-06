@@ -11,7 +11,7 @@
   ],
   "activationEvents": [
     "onCommand:TrucomanX.processText",
-    "onCommand:TrucomanX.replaceText" 
+    "onCommand:TrucomanX.replaceText"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -21,7 +21,7 @@
         "title": "TrucomanX: Process Selected Text"
       },
       {
-        "command": "TrucomanX.replaceText", 
+        "command": "TrucomanX.replaceText",
         "title": "TrucomanX: Replace this text"
       }
     ],
@@ -32,7 +32,12 @@
         "processThisText.diffTool": {
           "type": "string",
           "default": "meld",
-          "enum": ["meld", "xxdiff", "kdiff3", "diffuse"],
+          "enum": [
+            "meld",
+            "xxdiff",
+            "kdiff3",
+            "diffuse"
+          ],
           "description": "Choose the diff tool to use for comparing files."
         }
       }
@@ -47,18 +52,22 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.93.0",
     "@types/mocha": "^10.0.7",
     "@types/node": "20.x",
+    "@types/vscode": "^1.93.0",
     "@typescript-eslint/eslint-plugin": "^8.3.0",
     "@typescript-eslint/parser": "^8.3.0",
-    "eslint": "^9.9.1",
-    "typescript": "^5.5.4",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.9.1",
+    "typescript": "^5.5.4"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/trucomanx/extension-process-this-text.git"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.2",
+    "openai": "^4.58.1"
   }
 }
