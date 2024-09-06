@@ -1,6 +1,6 @@
 # process-this-text README
 
-This is the README for your extension "process-this-text". After writing up a brief description, we recommend including the following sections.
+In this extension exist som interesting text to text commans
 
 ## Features
 
@@ -14,46 +14,48 @@ For example if there is an image subfolder under your extension project workspac
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Need some of this diff programs:
+* meld
+* kdiff3
+* xxdiff
+* diffuse
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+* `processThisText.diffTool`: Specifies the diff tool to use for comparing files. You can set this to one of the available diff tools installed on your system, such as `meld`, `xxdiff`, `kdiff3`, or `diffuse`. The default value is `meld`.
+
+### Example Configuration
+
+To configure the diff tool, you need to add the following setting in your `settings.json`:
+
+```json
+{
+    "processThisText.diffTool": "meld"
+}
+```
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+* When you have VS code instlled from snap, then you can have problems lounching programs in terminal.
+Prefere a deb version when install.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+About the versions
 
-### 1.0.0
+### 0.0.1
 
-Initial release of ...
+Initial release of extension
 
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
 
 ---
 
 ## Following extension guidelines
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+* [Extension Guidelines](https://github.com/trucomanx/extension-process-this-text/blob/main/README.md)
 
 ## Working with Markdown
 
@@ -65,7 +67,6 @@ You can author your README using Visual Studio Code. Here are some useful editor
 
 ## For more information
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+* [Repository in github](https://github.com/trucomanx/extension-process-this-text)
 
 **Enjoy!**
