@@ -15,7 +15,7 @@ async function getLlamaResponse(apiKey: string, inputText: string): Promise<stri
     try {
         const response = await axios.post('https://api.llama.ai/v1/complete', {
             prompt: inputText,
-            max_tokens: 150, // Ajuste conforme necessário
+            max_tokens: 2000, // Ajuste conforme necessário
         }, {
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
@@ -38,6 +38,62 @@ async function getLlamaResponse(apiKey: string, inputText: string): Promise<stri
         return "Erro";
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Função para obter a resposta da API Ollama
+async function getOllamaResponse(inputText: string): Promise<string> {
+    try {
+        const response = await axios.post('http://localhost:11434/api/generate', {
+            prompt: inputText,
+            model: 'llama3.1:8b', // Usando o modelo correto
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            responseType: 'stream' // Estamos esperando a resposta como stream
+        });
+
+        let fullResponse = '';
+
+        response.data.on('data', (chunk: any) => {
+            const chunkStr = chunk.toString().trim();
+            const parts = chunkStr.split('\n'); // A resposta pode conter várias partes separadas por quebras de linha
+
+            parts.forEach((part: string) => {
+                try {
+                    const jsonPart = JSON.parse(part); // Parse cada parte individual como JSON
+                    if (jsonPart.response) {
+                        fullResponse += jsonPart.response; // Concatene o conteúdo de 'response'
+                    }
+                } catch (error) {
+                    console.error("Erro ao fazer parse da parte do JSON:", part, error);
+                }
+            });
+        });
+
+        return new Promise((resolve, reject) => {
+            response.data.on('end', () => {
+                resolve(fullResponse);
+            });
+
+            response.data.on('error', (err: any) => {
+                reject("Erro na leitura da stream: " + err);
+            });
+        });
+
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.error(`Erro na API Ollama: ${error.response?.data?.message || error.message}`);
+        } else if (error instanceof Error) {
+            console.error(`Ocorreu um erro: ${error.message}`);
+        } else {
+            console.error(`Ocorreu um erro desconhecido`);
+        }
+        return "Erro";
+    }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 import { OpenAI } from 'openai'; // Importa a classe OpenAI
 
@@ -94,8 +150,18 @@ async function getClaudeResponse(apiKey: string, inputText: string): Promise<str
 
 ////////////////////////////////////////////////////////////////////////////////
 // Função personalizada para processar o texto original
-function fun_process(input: string): string {
-    return input; 
+async function fun_process(input: string): Promise<string> {
+    
+    const inputText =   "Rescreve o texto escrito depois de [BEGIN]. "+
+                        "Nao incluas [BEGIN]. "+
+                    "Melhora a fluencia, concordancia e ortografia. "+
+                    "Respeita o formato do codigo fonte. "+
+                    "Respeita os saltos de linha. " + 
+                    "Nao agregues comentarios na sua resposta, "
+                    "so retorna o texto modificado.\n\n\n[BEGIN]";  
+    //vscode.window.showErrorMessage(inputText+input);
+    return getOllamaResponse(inputText+input); 
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -155,9 +221,13 @@ export function activate(context: vscode.ExtensionContext) {
                 //const apiKey = "";
                 //const processedText = await getOpenAIResponse(apiKey, text);
 
-                //
-                const apiKey = "";
-                const processedText = await getLlamaResponse(apiKey, text);
+                //const apiKey = "";
+                //const processedText = await getLlamaResponse(apiKey, text);
+                
+                //const processedText = await getOllamaResponse(text);
+
+                const processedText = await fun_process(text);
+                
 
                 const originalFile = createTempFile(text, 'original');
                 const processedFile = createTempFile(processedText, 'processed');
