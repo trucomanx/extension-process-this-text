@@ -1,6 +1,6 @@
 {
   "name": "process-this-text",
-  "displayName": "process this text",
+  "displayName": "Process This Text",
   "description": "An extension to process text and show diff",
   "version": "0.0.1",
   "engines": {
@@ -24,7 +24,19 @@
         "command": "TrucomanX.replaceText", 
         "title": "TrucomanX: Replace this text"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Process This Text Configuration",
+      "properties": {
+        "processThisText.diffTool": {
+          "type": "string",
+          "default": "meld",
+          "enum": ["meld", "xxdiff", "kdiff3", "diffuse"],
+          "description": "Choose the diff tool to use for comparing files."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

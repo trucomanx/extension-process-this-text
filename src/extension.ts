@@ -6,8 +6,9 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
+import { exec } from 'child_process';
 
-// Função personalizada para processar o texto original (já existente)
+// Função personalizada para processar o texto original
 function fun_process(input: string): string {
     return input.toUpperCase();  // Por exemplo, converter para maiúsculas
 }
@@ -40,6 +41,16 @@ function createTempFile(content: string, prefix: string): string {
     fs.writeFileSync(filePath, content, 'utf-8');
     return filePath;
 }
+
+// Função para verificar se o comando de diff está disponível
+function isCommandAvailable(command: string): Promise<boolean> {
+    return new Promise((resolve) => {
+        exec(`which ${command}`, (error) => {
+            resolve(!error);
+        });
+    });
+}
+
 
 // Função para gerar HTML colorido
 function generateHTMLContent(originalFile: string, processedFile: string): string {
@@ -75,8 +86,7 @@ function generateHTMLContent(originalFile: string, processedFile: string): strin
 }
 
 export function activate(context: vscode.ExtensionContext) {
-    // Primeiro comando: Processar texto selecionado
-    let processTextCommand = vscode.commands.registerCommand('TrucomanX.processText', () => {
+    let processTextCommand = vscode.commands.registerCommand('TrucomanX.processText', async () => {
         const editor = vscode.window.activeTextEditor;
 
         if (editor) {
@@ -102,11 +112,19 @@ export function activate(context: vscode.ExtensionContext) {
                 panel.webview.html = htmlContent;
                 */
 
-                // Abrir o terminal integrado e executar o comando meld
-                const terminal = vscode.window.createTerminal({ name: "Diff programa" });
-                terminal.show();
-                // meld, kdiff3, xxdiff, diffuse
-                terminal.sendText(`xxdiff ${originalFile} ${processedFile}`);
+                // Obter a configuração de diff tool escolhida pelo usuário
+                const config = vscode.workspace.getConfiguration('processThisText');
+                const diffTool = config.get<string>('diffTool') || 'meld';  // Valor padrão é 'meld'
+
+                // Verificar se o comando de diff está disponível
+                if (await isCommandAvailable(diffTool)) {
+                    // Abrir o terminal integrado e executar o comando de diff tool
+                    const terminal = vscode.window.createTerminal({ name: "Diff Tool" });
+                    terminal.show();
+                    terminal.sendText(`${diffTool} ${originalFile} ${processedFile}`);
+                } else {
+                    vscode.window.showErrorMessage(`Ferramenta de diff não encontrada: ${diffTool}`);
+                }
             } else {
                 vscode.window.showInformationMessage("Selecione um texto para processar.");
             }
@@ -138,7 +156,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(processTextCommand);
-    context.subscriptions.push(replaceTextCommand);  // Registrar o novo comando
+    context.subscriptions.push(replaceTextCommand);
 }
 
 export function deactivate() {}
