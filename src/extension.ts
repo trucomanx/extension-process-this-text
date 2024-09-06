@@ -1,7 +1,5 @@
 // npm run compile
 
-
-
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as os from 'os';

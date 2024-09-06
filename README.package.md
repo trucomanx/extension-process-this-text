@@ -7,6 +7,7 @@
 
     #sudo npm uninstall -g yo generator-code
     sudo npm install -g yo generator-code
+    yo code
 
 # Compile the extension code
 
@@ -15,9 +16,10 @@
 
 # Create the vsix file
 
-    #npm install axios # llama
-    #npm install @anthropic-ai/sdk # claude
-    #npm install openai # gpt
+    
+    npm install axios # llama
+    npm install @anthropic-ai/sdk # claude
+    npm install openai # gpt
     npm install -g vsce
     vsce package
 
