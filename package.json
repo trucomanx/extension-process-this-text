@@ -10,19 +10,19 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:TrucomanX.processText",
+    "onCommand:TrucomanX.improveText",
     "onCommand:TrucomanX.replaceText"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "TrucomanX.processText",
-        "title": "TrucomanX: Process Selected Text"
+        "command": "TrucomanX.improveText",
+        "title": "TrucomanX: Improve the Selected Text"
       },
       {
         "command": "TrucomanX.replaceText",
-        "title": "TrucomanX: Replace this text"
+        "title": "TrucomanX: Line breaks in punctuation marks"
       }
     ],
     "configuration": {

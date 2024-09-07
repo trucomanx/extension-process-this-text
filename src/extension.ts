@@ -152,14 +152,12 @@ async function getClaudeResponse(apiKey: string, inputText: string): Promise<str
 // Função personalizada para processar o texto original
 async function fun_process(input: string): Promise<string> {
     
-    const inputText =   "Rescreve o texto escrito depois de [BEGIN]. "+
-                        "Nao incluas [BEGIN]. "+
-                    "Melhora a fluencia, concordancia e ortografia. "+
-                    "Respeita o formato do codigo fonte. "+
-                    "Respeita os saltos de linha. " + 
-                    "Nao agregues comentarios na sua resposta, "
-                    "so retorna o texto modificado.\n\n\n[BEGIN]";  
-    //vscode.window.showErrorMessage(inputText+input);
+    const inputText =   "Melhora a fluência, concordância e ortografia desse texto. "+
+                        "O texto é código fonte então respeita o formato e saltos de linha. "+
+                        "Não agregues comentários ou observações na sua resposta, "+
+                        "só responde com o texto corrigido. "+
+                        "O texto que voce deve corrigir esta escrito aqui abaixo:\n\n\n\n";  
+    vscode.window.showErrorMessage(inputText+input);
     return getOllamaResponse(inputText+input); 
 
 }
@@ -205,7 +203,7 @@ function fun_replace(input: string): string {
 ////////////////////////////////////////////////////////////////////////////////
 
 export function activate(context: vscode.ExtensionContext) {
-    let processTextCommand = vscode.commands.registerCommand('TrucomanX.processText', async () => {
+    let processTextCommand = vscode.commands.registerCommand('TrucomanX.improveText', async () => {
         const editor = vscode.window.activeTextEditor;
 
         if (editor) {
@@ -213,19 +211,6 @@ export function activate(context: vscode.ExtensionContext) {
             const text = editor.document.getText(selection);
 
             if (text) {
-                // const apiKey = "";
-                // const processedText = await getClaudeResponse(apiKey,text);
-
-                // const processedText = fun_process(text);
-
-                //const apiKey = "";
-                //const processedText = await getOpenAIResponse(apiKey, text);
-
-                //const apiKey = "";
-                //const processedText = await getLlamaResponse(apiKey, text);
-                
-                //const processedText = await getOllamaResponse(text);
-
                 const processedText = await fun_process(text);
                 
 
