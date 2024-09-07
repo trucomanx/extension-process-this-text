@@ -16,6 +16,7 @@
 
 # Create the vsix file
 
+    npm install --save-dev @types/vscode
     
     npm install axios # llama
     npm install @anthropic-ai/sdk # claude
